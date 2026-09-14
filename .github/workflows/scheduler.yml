@@ -1,0 +1,29 @@
+name: Auto Publish Recipe
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # يعمل يومياً الساعة 8 صباحاً
+  workflow_dispatch: # يتيح لك التشغيل اليدوي للتجربة من زر Actions في جيت هب
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install google-genai requests
+
+      - name: Run script
+        env:
+          WP_URL: ${{ secrets.WP_URL }}
+          WP_USER: ${{ secrets.WP_USER }}
+          WP_PASS: ${{ secrets.WP_PASS }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+        run: python auto_blog.py
