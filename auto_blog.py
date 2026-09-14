@@ -24,7 +24,7 @@ def generate_recipe_with_ai():
     )
 
     completion = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
     )
 
