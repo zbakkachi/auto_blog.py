@@ -2,7 +2,6 @@ import os
 from groq import Groq
 import requests
 
-# جلب المتغيرات السرية من بيئة GitHub Secrets
 WP_URL = os.environ.get("WP_URL")
 WP_USER = os.environ.get("WP_USER")
 WP_PASS = os.environ.get("WP_PASS")
@@ -10,7 +9,6 @@ AI_API_KEY = os.environ.get("AI_API_KEY")
 
 
 def generate_recipe_with_ai():
-    """توليد مقال وصفة طبخ باللغة الإنجليزية وتنسيقه بصيغة HTML عبر Groq"""
     client = Groq(api_key=AI_API_KEY)
 
     prompt = (
@@ -24,7 +22,7 @@ def generate_recipe_with_ai():
     )
 
     completion = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama3-8b-8192",
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -42,7 +40,6 @@ def generate_recipe_with_ai():
 
 
 def publish_to_wordpress():
-    """إرسال المقال الإنجليزي ونشره مباشرة على ووردبريس"""
     print("جاري توليد المقال باللغة الإنجليزية...")
     title, content = generate_recipe_with_ai()
 
