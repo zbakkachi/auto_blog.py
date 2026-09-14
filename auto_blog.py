@@ -1,5 +1,5 @@
 import os
-from google import genai
+from groq import Groq
 import requests
 
 # جلب المتغيرات السرية من بيئة GitHub Secrets
@@ -10,8 +10,8 @@ AI_API_KEY = os.environ.get("AI_API_KEY")
 
 
 def generate_recipe_with_ai():
-    """توليد مقال وصفة طبخ باللغة الإنجليزية وتنسيقه بصيغة HTML"""
-    client = genai.Client(api_key=AI_API_KEY)
+    """توليد مقال وصفة طبخ باللغة الإنجليزية وتنسيقه بصيغة HTML عبر Groq"""
+    client = Groq(api_key=AI_API_KEY)
 
     prompt = (
         "You are an expert SEO content writer and professional chef. Write a"
@@ -23,12 +23,12 @@ def generate_recipe_with_ai():
         " must be the complete HTML content."
     )
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
+    completion = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
     )
 
-    text_output = response.text.strip()
+    text_output = completion.choices[0].message.content.strip()
 
     if "|" in text_output:
         parts = text_output.split("|", 1)
@@ -49,7 +49,7 @@ def publish_to_wordpress():
     payload = {
         "title": title,
         "content": content,
-        "status": "publish",  # أو "draft" للمراجعة قبل النشر
+        "status": "publish",
     }
 
     print(f"جاري نشر المقال بعنوان: {title}")
