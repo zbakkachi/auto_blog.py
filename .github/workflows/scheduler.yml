@@ -20,6 +20,18 @@ jobs:
       - name: Install dependencies
         run: pip install groq requests
 
+      - name: Check secrets
+        run: |
+          if [ -z "$WP_URL" ]; then echo "WP_URL is missing!"; fi
+          if [ -z "$WP_USER" ]; then echo "WP_USER is missing!"; fi
+          if [ -z "$WP_PASS" ]; then echo "WP_PASS is missing!"; fi
+          if [ -z "$AI_API_KEY" ]; then echo "AI_API_KEY is missing!"; fi
+        env:
+          WP_URL: ${{ secrets.WP_URL }}
+          WP_USER: ${{ secrets.WP_USER }}
+          WP_PASS: ${{ secrets.WP_PASS }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+
       - name: Run script
         env:
           WP_URL: ${{ secrets.WP_URL }}
